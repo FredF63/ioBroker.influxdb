@@ -3,9 +3,9 @@ os:
   - osx
 language: node_js
 node_js:
-  - '8'
   - '10'
   - '12'
+  - '14'
 sudo: required
 before_script:
   - export NPMVERSION=$(echo "$($(which npm) -v)"|cut -c1)
@@ -21,8 +21,6 @@ before_script:
   - 'if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ln -sfv /usr/local/opt/influxdb/*.plist ~/Library/LaunchAgents; fi'
   - 'if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then launchctl load ~/Library/LaunchAgents/homebrew.mxcl.influxdb.plist; fi'
   - sleep 15
-  - npm install winston@3.2.1
-  - 'npm install https://github.com/ioBroker/ioBroker.js-controller/tarball/master --production'
 env:
   - CXX=g++-6
 addons:

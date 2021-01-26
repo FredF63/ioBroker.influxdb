@@ -6,7 +6,7 @@
             "de": "Loggt die Historie von einzelnen Zuständen in einer InfluxDB",
             "ru": "Сохраняет историю событий для отдельных состояний в InfluxDB"
         },
-        "version": "1.7.0",
+        "version": "1.9.4",
         "title": "Logging data with InfluxDB",
         "titleLang": {
             "en": "Logging data with InfluxDB",
@@ -20,6 +20,150 @@
             "pl": "Rejestrowanie danych za pomocą InfluxDB"
         },
         "news": {
+            "1.9.4": {
+                "en": "Optimize stop handling",
+                "de": "Optimieren Sie das Stop-Handling",
+                "ru": "Оптимизировать обработку остановок",
+                "pt": "Otimize o manuseio de parada",
+                "nl": "Optimaliseer het afhandelen van stops",
+                "fr": "Optimiser la gestion des arrêts",
+                "it": "Ottimizza la gestione delle fermate",
+                "es": "Optimizar el manejo de paradas",
+                "pl": "Zoptymalizuj obsługę zatrzymania",
+                "zh-cn": "优化停止处理"
+            },
+            "1.9.3": {
+                "en": "Crash case prevented (Sentry IOBROKER-INFLUXDB-T, IOBROKER-INFLUXDB-Y)",
+                "de": "Absturz verhindert (Sentry IOBROKER-INFLUXDB-T, IOBROKER-INFLUXDB-Y)",
+                "ru": "Сбой предотвращен (Sentry IOBROKER-INFLUXDB-T, IOBROKER-INFLUXDB-Y)",
+                "pt": "Caso de falha impedido (Sentry IOBROKER-INFLUXDB-T, IOBROKER-INFLUXDB-Y)",
+                "nl": "Crashcase voorkomen (Sentry IOBROKER-INFLUXDB-T, IOBROKER-INFLUXDB-Y)",
+                "fr": "Crash case évité (Sentry IOBROKER-INFLUXDB-T, IOBROKER-INFLUXDB-Y)",
+                "it": "Crash case prevenuto (Sentry IOBROKER-INFLUXDB-T, IOBROKER-INFLUXDB-Y)",
+                "es": "Caso de accidente evitado (Sentry IOBROKER-INFLUXDB-T, IOBROKER-INFLUXDB-Y)",
+                "pl": "Zapobiegano awariom (Sentry IOBROKER-INFLUXDB-T, IOBROKER-INFLUXDB-Y)",
+                "zh-cn": "防止发生崩溃情况（哨兵IOBROKER-INFLUXDB-T，IOBROKER-INFLUXDB-Y）"
+            },
+            "1.9.2": {
+                "en": "crash prevented (Sentry IOBROKER-INFLUXDB-G)",
+                "de": "Absturz verhindert (Sentry IOBROKER-INFLUXDB-G)",
+                "ru": "сбой предотвращен (Sentry IOBROKER-INFLUXDB-G)",
+                "pt": "travamento evitado (Sentry IOBROKER-INFLUXDB-G)",
+                "nl": "crash voorkomen (Sentry IOBROKER-INFLUXDB-G)",
+                "fr": "crash évité (Sentry IOBROKER-INFLUXDB-G)",
+                "it": "crash prevenuto (Sentry IOBROKER-INFLUXDB-G)",
+                "es": "accidente prevenido (Sentry IOBROKER-INFLUXDB-G)",
+                "pl": "zapobieganie awariom (Sentry IOBROKER-INFLUXDB-G)",
+                "zh-cn": "防止崩溃（Sentry IOBROKER-INFLUXDB-G）"
+            },
+            "1.9.1": {
+                "en": "crash prevented (Sentry IOBROKER-INFLUXDB-E)",
+                "de": "Absturz verhindert (Sentry IOBROKER-INFLUXDB-E)",
+                "ru": "предотвращено падение (Sentry IOBROKER-INFLUXDB-E)",
+                "pt": "falha impedida (Sentry IOBROKER-INFLUXDB-E)",
+                "nl": "crash voorkomen (Sentry IOBROKER-INFLUXDB-E)",
+                "fr": "crash évité (Sentry IOBROKER-INFLUXDB-E)",
+                "it": "arresto anomalo impedito (Sentry IOBROKER-INFLUXDB-E)",
+                "es": "accidente evitado (Sentry IOBROKER-INFLUXDB-E)",
+                "pl": "zapobieganie awariom (Sentry IOBROKER-INFLUXDB-E)",
+                "zh-cn": "防止崩溃（Sentry IOBROKER-INFLUXDB-E）"
+            },
+            "1.9.0": {
+                "en": "Optimize handling in case of write errors and host unavailabilities",
+                "de": "Optimieren Sie die Behandlung bei Schreibfehlern und Nichtverfügbarkeiten des Hosts",
+                "ru": "Оптимизировать обработку в случае ошибок записи и недоступности хоста",
+                "pt": "Otimize a manipulação em caso de erros de gravação e indisponibilidade de host",
+                "nl": "Optimaliseer de afhandeling in het geval van schrijffouten en het niet beschikbaar zijn van de host",
+                "fr": "Optimiser la gestion en cas d'erreurs d'écriture et d'indisponibilité de l'hôte",
+                "it": "Ottimizza la gestione in caso di errori di scrittura e indisponibilità dell'host",
+                "es": "Optimice el manejo en caso de errores de escritura y falta de disponibilidad del host",
+                "pl": "Zoptymalizuj obsługę w przypadku błędów zapisu i niedostępności hosta",
+                "zh-cn": "在写入错误和主机不可用的情况下优化处理"
+            },
+            "1.8.8": {
+                "en": "Some errors prevented\nSet timeouts for influxdb connections to make sure connectioens do not run forever",
+                "de": "Einige Fehler wurden verhindert\nLegen Sie Zeitüberschreitungen für Influxdb-Verbindungen fest, um sicherzustellen, dass die Verbindungen nicht für immer ausgeführt werden",
+                "ru": "Предотвращены некоторые ошибки\nУстановите тайм-ауты для подключений на притоке, чтобы убедиться, что соединения не будут работать вечно",
+                "pt": "Alguns erros impedidos\nDefina tempos limite para conexões influxdb para garantir que os conectores não sejam executados para sempre",
+                "nl": "Sommige fouten zijn voorkomen\nStel time-outs in voor influxdb-verbindingen om ervoor te zorgen dat connectioens niet voor altijd worden uitgevoerd",
+                "fr": "Certaines erreurs évitées\nDéfinissez des délais d'expiration pour les connexions influxdb pour vous assurer que les connexions ne s'exécutent pas indéfiniment",
+                "it": "Alcuni errori sono stati prevenuti\nImpostare i timeout per le connessioni influxdb per assicurarsi che i collegamenti non funzionino per sempre",
+                "es": "Algunos errores prevenidos\nEstablezca tiempos de espera para las conexiones influxdb para asegurarse de que las conexiones no se ejecuten para siempre",
+                "pl": "Zapobiegnięto niektórym błędom\nUstaw limity czasu dla połączeń napływających db, aby upewnić się, że connectioens nie będą działać wiecznie",
+                "zh-cn": "防止某些错误\n设置influxdb连接超时，以确保connectioens不会永远运行"
+            },
+            "1.8.7": {
+                "en": "added command to read supported features",
+                "de": "Befehl zum Lesen der unterstützten Funktionen hinzugefügt",
+                "ru": "добавлена команда для чтения поддерживаемых функций",
+                "pt": "comando adicionado para ler os recursos suportados",
+                "nl": "opdracht toegevoegd om ondersteunde functies te lezen",
+                "fr": "commande ajoutée pour lire les fonctionnalités prises en charge",
+                "it": "aggiunto comando per leggere le funzionalità supportate",
+                "es": "comando agregado para leer las funciones compatibles",
+                "pl": "dodano polecenie odczytu obsługiwanych funkcji",
+                "zh-cn": "添加了命令以读取支持的功能"
+            },
+            "1.8.6": {
+                "en": "make sure disabling of datapoints while starting adapter do not crash adapter (Sentry IOBROKER-INFLUXDB-7)\nMake sure all start values are processed correctly\nMore checks to make sure to not crash when states are disabled while data are processed (Sentry IOBROKER-INFLUXDB-8)",
+                "de": "Stellen Sie sicher, dass das Deaktivieren von Datenpunkten beim Starten des Adapters den Adapter nicht zum Absturz bringt (Sentry IOBROKER-INFLUXDB-7).\nStellen Sie sicher, dass alle Startwerte korrekt verarbeitet werden\nWeitere Überprüfungen, um sicherzustellen, dass nicht abgestürzt wird, wenn Status deaktiviert werden, während Daten verarbeitet werden (Sentry IOBROKER-INFLUXDB-8)",
+                "ru": "убедитесь, что отключение точек данных при запуске адаптера не приводит к сбою адаптера (Sentry IOBROKER-INFLUXDB-7)\nУбедитесь, что все начальные значения обработаны правильно\nДополнительные проверки, чтобы убедиться, что не происходит сбой при отключении состояний во время обработки данных (Sentry IOBROKER-INFLUXDB-8)",
+                "pt": "verifique se a desativação dos pontos de dados ao iniciar o adaptador não trava o adaptador (Sentry IOBROKER-INFLUXDB-7)\nVerifique se todos os valores iniciais foram processados corretamente\nMais verificações para garantir que não travam quando os estados são desativados enquanto os dados são processados (Sentry IOBROKER-INFLUXDB-8)",
+                "nl": "zorg ervoor dat het uitschakelen van datapunten tijdens het starten van de adapter de adapter niet crasht (Sentry IOBROKER-INFLUXDB-7)\nZorg ervoor dat alle startwaarden correct worden verwerkt\nMeer controles om ervoor te zorgen dat ze niet crashen wanneer staten zijn uitgeschakeld terwijl gegevens worden verwerkt (Sentry IOBROKER-INFLUXDB-8)",
+                "fr": "assurez-vous que la désactivation des points de données lors du démarrage de l'adaptateur ne plante pas l'adaptateur (Sentry IOBROKER-INFLUXDB-7)\nAssurez-vous que toutes les valeurs de départ sont traitées correctement\nPlus de contrôles pour vous assurer de ne pas planter lorsque les états sont désactivés pendant le traitement des données (Sentry IOBROKER-INFLUXDB-8)",
+                "it": "assicurarsi che la disabilitazione dei punti dati durante l'avvio dell'adattatore non causi l'arresto anomalo dell'adattatore (Sentry IOBROKER-INFLUXDB-7)\nAssicurarsi che tutti i valori iniziali siano elaborati correttamente\nAltri controlli per assicurarsi di non arrestarsi in modo anomalo quando gli stati sono disabilitati durante l'elaborazione dei dati (Sentry IOBROKER-INFLUXDB-8)",
+                "es": "asegúrese de que la desactivación de los puntos de datos al iniciar el adaptador no bloquee el adaptador (Sentry IOBROKER-INFLUXDB-7)\nAsegúrese de que todos los valores iniciales se procesen correctamente\nMás comprobaciones para asegurarse de no bloquearse cuando los estados están deshabilitados mientras se procesan los datos (Sentry IOBROKER-INFLUXDB-8)",
+                "pl": "upewnij się, że wyłączenie punktów danych podczas uruchamiania adaptera nie powoduje awarii adaptera (Sentry IOBROKER-INFLUXDB-7)\nUpewnij się, że wszystkie wartości początkowe są poprawnie przetwarzane\nWięcej kontroli, aby upewnić się, że nie ulegnie awarii, gdy stany są wyłączone podczas przetwarzania danych (Sentry IOBROKER-INFLUXDB-8)",
+                "zh-cn": "确保在启动适配器时禁用数据点不要使适配器崩溃（Sentry IOBROKER-INFLUXDB-7）\n确保正确处理了所有起始值\n更多检查以确保在处理数据时禁用状态时不会崩溃（Sentry IOBROKER-INFLUXDB-8）"
+            },
+            "1.8.5": {
+                "en": "set default history if not yet set",
+                "de": "Standardverlauf festlegen, falls noch nicht festgelegt",
+                "ru": "установить историю по умолчанию, если еще не установлено",
+                "pt": "definir histórico padrão se ainda não estiver definido",
+                "nl": "stel de standaardgeschiedenis in als deze nog niet is ingesteld",
+                "fr": "définir l'historique par défaut s'il n'est pas encore défini",
+                "it": "imposta la cronologia predefinita se non ancora impostata",
+                "es": "establecer el historial predeterminado si aún no está configurado",
+                "pl": "ustaw domyślną historię, jeśli jeszcze nie została ustawiona",
+                "zh-cn": "设置默认历史记录（如果尚未设置）"
+            },
+            "1.8.4": {
+                "en": "make sure disabling of datapoints do not crash adapter (Sentry IOBROKER-INFLUXDB-4)",
+                "de": "Stellen Sie sicher, dass das Deaktivieren von Datenpunkten den Adapter nicht zum Absturz bringt (Sentry IOBROKER-INFLUXDB-4).",
+                "ru": "убедитесь, что отключение точек данных не приводит к сбою адаптера (Sentry IOBROKER-INFLUXDB-4)",
+                "pt": "verifique se a desativação dos pontos de dados não trava o adaptador (Sentry IOBROKER-INFLUXDB-4)",
+                "nl": "zorg ervoor dat het uitschakelen van datapunten de adapter niet crasht (Sentry IOBROKER-INFLUXDB-4)",
+                "fr": "assurez-vous que la désactivation des points de données ne plante pas l'adaptateur (Sentry IOBROKER-INFLUXDB-4)",
+                "it": "assicurarsi che la disabilitazione dei punti dati non causi l'arresto anomalo dell'adattatore (Sentry IOBROKER-INFLUXDB-4)",
+                "es": "asegúrese de que la desactivación de los puntos de datos no bloquee el adaptador (Sentry IOBROKER-INFLUXDB-4)",
+                "pl": "upewnij się, że wyłączenie punktów danych nie powoduje awarii adaptera (Sentry IOBROKER-INFLUXDB-4)",
+                "zh-cn": "确保禁用数据点不会使适配器崩溃（Sentry IOBROKER-INFLUXDB-4）"
+            },
+            "1.8.3": {
+                "en": "Fix pot crash case when deleting objects while saving values (Sentry)",
+                "de": "Behebung eines Pot-Crash-Falls beim Löschen von Objekten beim Speichern von Werten (Sentry)",
+                "ru": "Исправлен случай сбоя банка при удалении объектов при сохранении значений (Sentry)",
+                "pt": "Corrigir caso de falha de maconha ao excluir objetos e salvar valores (Sentry)",
+                "nl": "Pot-crashcase repareren bij het verwijderen van objecten tijdens het opslaan van waarden (Sentry)",
+                "fr": "Correction d'un cas de crash de pot lors de la suppression d'objets lors de l'enregistrement des valeurs (Sentry)",
+                "it": "Risolto il caso di crash del piatto durante l'eliminazione di oggetti durante il salvataggio dei valori (Sentry)",
+                "es": "Se corrigió el caso de bloqueo del bote al eliminar objetos al guardar valores (Sentry)",
+                "pl": "Napraw przypadek awarii puli podczas usuwania obiektów podczas zapisywania wartości (Sentry)",
+                "zh-cn": "修复在保存值的同时删除对象时发生锅底的情况（Sentry）"
+            },
+            "1.8.2": {
+                "en": "REQUIRES at least js-controller 2.0, fixes and optimizations, ready for js-controller 3.0, Sentry added for Error reporting",
+                "de": "ERFORDERT mindestens js-controller 2.0, Korrekturen und Optimierungen, bereit für js-controller 3.0, Sentry für Fehlerberichterstattung hinzugefügt",
+                "ru": "ТРЕБУЕТ как минимум js-controller 2.0, исправления и оптимизации, готов для js-controller 3.0, добавлен Sentry для отчетов об ошибках",
+                "pt": "EXIGE pelo menos o js-controller 2.0, correções e otimizações, pronto para o controller 3.0, acrescentou o Sentry para o relatório de erros",
+                "nl": "VEREIST minimaal js-controller 2.0, fixes en optimalisaties, klaar voor js-controller 3.0, Sentry toegevoegd voor foutrapportage",
+                "fr": "NÉCESSITE au moins js-controller 2.0, des corrections et des optimisations, prêt pour js-controller 3.0, Sentry ajouté pour le rapport d'erreurs",
+                "it": "RICHIEDE almeno js-controller 2.0, correzioni e ottimizzazioni, pronto per js-controller 3.0, aggiunta Sentry per la segnalazione degli errori",
+                "es": "REQUIERE al menos js-controller 2.0, correcciones y optimizaciones, listo para js-controller 3.0, Sentry agregado para informes de errores",
+                "pl": "WYMAGA co najmniej js-kontrolera 2.0, poprawek i optymalizacji, gotowy do js-kontrolera 3.0, dodano Sentry do raportowania błędów",
+                "zh-cn": "至少需要js-controller 2.0，修复和优化，为js-controller 3.0做好准备，并添加了Sentry以进行错误报告"
+            },
             "1.7.0": {
                 "en": "Support of compact mode",
                 "de": "Unterstützung des Kompaktmodus",
@@ -65,147 +209,80 @@
                 "it": "Correzioni di Admin3",
                 "es": "Correcciones de Admin3",
                 "pl": "Poprawki Admin3"
-            },
-            "1.5.1": {
-                "en": "Admin3 Fixes",
-                "de": "Admin3-Korrekturen",
-                "ru": "Исправления Admin3",
-                "pt": "Admin3 Fixes",
-                "nl": "Admin3 Fixes",
-                "fr": "Corrections Admin3",
-                "it": "Correzioni di Admin3",
-                "es": "Correcciones de Admin3",
-                "pl": "Poprawki Admin3"
-            },
-            "1.5.0": {
-                "en": "Ready for Admin3",
-                "de": "Bereit für Admin3",
-                "ru": "Готово для Admin3",
-                "pt": "Pronto para Admin3",
-                "nl": "Klaar voor Admin3",
-                "fr": "Prêt pour Admin3",
-                "it": "Pronto per Admin3",
-                "es": "Listo para Admin3",
-                "pl": "Gotowy na Admin3"
-            },
-            "1.4.8": {
-                "en": "fix relog value feature and enhance type conflict resolving",
-                "de": "Erneutes Logging korrigiert und Typ-Konflikt-Behandlung verbessert",
-                "ru": "fix relog value feature and enhance type conflict resolving"
-            },
-            "1.4.7": {
-                "en": "add better support when no start date is set for getHistory (used by Admin)",
-                "de": "Besseren Support hinzugefügt, wenn bei getHistory kein Start-Datum angegeben wurde (benutzt von Admin)",
-                "ru": "add better support when no start date is set for getHistory (used by Admin)"
-            },
-            "1.4.6": {
-                "en": "add \"save last value\"",
-                "de": "Das Speichern des vorherigen Wertes wurde hinzugefügt",
-                "ru": "add \"save last value\""
-            },
-            "1.4.5": {
-                "en": "fix behaviour of log interval to always log the current value",
-                "de": "Verhalten vom Logging in bestimmten Zeitabständen geändert, sodass immer der aktuellste Wert geloggt wird",
-                "ru": "fix behaviour of log interval to always log the current value"
-            },
-            "1.4.4": {
-                "en": "fix connected datapoint",
-                "de": "Verbunden-Datenpunkt korrekt gesetzt",
-                "ru": "fix connected datapoint"
-            },
-            "1.4.3": {
-                "en": "fix in datatype conversions",
-                "de": "Fehlerbehebung in Datentypkonvertierungen",
-                "ru": "fix in datatype conversions"
-            },
-            "1.4.2": {
-                "en": "Changed Debounce-Feature to log the last stable value that did not changed for given time!! Add option to define storage datatype per datapoint inclusing converting the value if needed",
-                "de": "Debounce-Feature geändert, sodass der letzte Wert der in der angegeben Zeit stabil geblieben ist geloggt wird!! Hinzufügen der Option den Speicher-Datenyp eines Datenpunktes inklusive der nötigen Konvertierung definieren zu können",
-                "ru": "Changed Debounce-Feature to log the last stable value that did not changed for given time!! Add option to define storage datatype per datapoint inclusing converting the value if needed"
-            },
-            "1.3.4": {
-                "en": "Small fix for older configurations",
-                "de": "Kleine Fehlerbehebung für ältere Konfigurationen",
-                "ru": "Small fix for older configurations"
-            },
-            "1.3.3": {
-                "en": "Enhance handling of DB outages with mass writes afterwards",
-                "de": "Behandlung von DB-Ausfällen und folgenden Massen-Schreibaktionen verbessert",
-                "ru": "Enhance handling of DB outages with mass writes afterwards"
-            },
-            "1.3.2": {
-                "en": "Enhance Min-Delta logic for datapoints from type mixed",
-                "de": "Min-Delta-Logik verbessert für Mixed-Datenpunkte",
-                "ru": "Enhance Min-Delta logic for datapoints from type mixed"
-            },
-            "1.3.1": {
-                "en": "Fix handling of float values in Adapter config and Datapoint config.",
-                "de": "Fehlerbehebung bei der Eingabe von Zahlen mit Kommastellen in der Adapter- und Datenpunk-Konfiguration.",
-                "ru": "Fix handling of float values in Adapter config and Datapoint config."
-            },
-            "1.3.0": {
-                "en": "Add messages enableHistory/disableHistory/getEnabledDPs, add support to log changes only if value differs a minimum value for numbers.",
-                "de": "Messages enableHistory/disableHistory/getEnabledDPs hinzugefügt, Unterstützung zum Loggen wenn der Zahlenwert um einen Mindestwert abweicht.",
-                "ru": "Add messages enableHistory/disableHistory/getEnabledDPs, add support to log changes only if value differs a minimum value for numbers."
             }
         },
-        "mode":                     "daemon",
-        "platform":                 "Javascript/Node.js",
-        "loglevel":                 "info",
-        "messagebox":               true,
-        "subscribe":                "messagebox",
-        "keywords":                 ["charts", "logging", "influxdb"],
-        "preserveSettings":         "custom",
-        "supportCustoms":           true,
-        "getHistory":           	true,
-        "enabled":                  true,
-        "compact":                  true,
-        "materialize":              true,
-		"dependencies":             [{"js-controller": ">=0.12.0","admin": ">=1.6.10"}],
-        "stopBeforeUpdate":         true,
-        "supportStopInstance":      2000,
-        "restartAdapters":          ["influxdb"],
+        "mode": "daemon",
+        "platform": "Javascript/Node.js",
+        "loglevel": "info",
+        "messagebox": true,
+        "subscribe": "messagebox",
+        "keywords": [
+            "charts",
+            "logging",
+            "influxdb"
+        ],
+        "preserveSettings": "custom",
+        "supportCustoms": true,
+        "getHistory": true,
+        "enabled": true,
+        "compact": true,
+        "materialize": true,
+        "dependencies": [
+            {
+                "js-controller": ">=2.0.0"
+            },
+            {
+                "admin": ">=1.6.10"
+            }
+        ],
+        "supportStopInstance": 3000,
+        "stopTimeout": 3000,
         "authors": [
             "Bluefox <dogafox@gmail.com>",
             "Apollon77 <ingo@fischer-ka.de>"
         ],
-        "license":                  "MIT",
-        "readme":                   "https://github.com/ioBroker/ioBroker.influxdb/blob/master/README.md",
-        "icon":                     "influxdb.png",
-        "extIcon":                  "https://raw.githubusercontent.com/ioBroker/ioBroker.influxdb/master/admin/influxdb.png",
-		"type":                     "storage",
-        "config":{
-            "minWidth":  570,
-            "width ":    435,
+        "license": "MIT",
+        "readme": "https://github.com/ioBroker/ioBroker.influxdb/blob/master/README.md",
+        "icon": "influxdb.png",
+        "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.influxdb/master/admin/influxdb.png",
+        "type": "storage",
+        "config": {
+            "minWidth": 570,
+            "width ": 435,
             "minHeight": 200,
-            "height":    540
+            "height": 540
         },
         "docs": {
             "de": [
                 "docs/de/influxdb.md"
             ]
+        },
+        "plugins": {
+            "sentry": {
+                "dsn": "https://29eecf4e8c954f2ea78110d47a9b122d@sentry.iobroker.net/54"
+            }
         }
     },
     "native": {
-        "debounce":                  1000,
-        "retention":                 31536000,
-        "dbname":                    "iobroker",
-        "host":                      "localhost",
-        "protocol":                  "http",
-        "port":                      8086,
-        "user":                      "",
-        "password":                  "",
-        "round":                     4,
-        "seriesBufferMax":           0,
+        "debounce": 1000,
+        "retention": 31536000,
+        "dbname": "iobroker",
+        "host": "localhost",
+        "protocol": "http",
+        "port": 8086,
+        "user": "",
+        "password": "",
+        "round": 4,
+        "seriesBufferMax": 0,
         "seriesBufferFlushInterval": 600,
-        "changesRelogInterval":      0,
-        "changesMinDelta":           0,
-        "reconnectInterval":         10000,
-        "pingInterval":              15000
+        "changesRelogInterval": 0,
+        "changesMinDelta": 0,
+        "reconnectInterval": 10000,
+        "pingInterval": 15000
     },
     "instanceObjects": [
         {
-            "_id":  "info",
+            "_id": "info",
             "type": "channel",
             "common": {
                 "name": "Information"
@@ -213,15 +290,15 @@
             "native": {}
         },
         {
-            "_id":  "info.connection",
+            "_id": "info.connection",
             "type": "state",
             "common": {
-                "role":  "indicator.connected",
-                "name":  "If connected to InfluxDB",
-                "type":  "boolean",
-                "read":  true,
+                "role": "indicator.connected",
+                "name": "If connected to InfluxDB",
+                "type": "boolean",
+                "read": true,
                 "write": false,
-                "def":   false
+                "def": false
             },
             "native": {}
         }

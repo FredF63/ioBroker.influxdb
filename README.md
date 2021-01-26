@@ -11,6 +11,8 @@ This adapter saves state history into InfluxDB.
 
 **Only InfluxDB >= v0.9 supported, v1.0 recommended**
 
+**This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information how to disable the error reporting see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)! Sentry reporting is used starting with js-controller 3.0.
+
 ## Direct writes or buffered writes?
 With the default configuration the adapter stores each single datapoint directly into the database and only use the internal buffer if the database is not available. If database was not available the buffer is flushed at the given interval, so it can take the defined interval till the missing points are written!
 
@@ -145,7 +147,7 @@ sendTo('influxdb.0', 'getHistory', {
 Possible options:
 - **start** - (optional) time in ms - *new Date().getTime()*'
 - **end** - (optional) time in ms - *new Date().getTime()*', by default is (now + 5000 seconds)
-- **step** - (optional) used for  aggregate (max, min, average, total, count) step in ms of intervals
+- **step** - (required if aggregate is not "none") used for  aggregate functions (max, min, average, total, count) step in ms of intervals
 - **count** - (optional) number of values if aggregate is 'onchange'/'none' or number of intervals if other aggregate method. Count will be ignored if step is set.
 - **limit** - do not return more entries than limit (only used if aggregate is 'onchange'/'none')
 - **addId** - if *id* field should be included in answer
@@ -245,6 +247,50 @@ sendTo('influxdb.0', 'getEnabledDPs', {}, function (result) {
 
 
 ## Changelog
+
+### 1.9.4 (2021-01-17)
+* (Apollon77) Optimize stop handling
+
+### 1.9.3 (2020-11-07)
+* (Apollon77) Crash case prevented (Sentry IOBROKER-INFLUXDB-T, IOBROKER-INFLUXDB-Y)
+
+### 1.9.2 (2020-08-06)
+* (Apollon77) crash prevented (Sentry IOBROKER-INFLUXDB-G)
+
+### 1.9.1 (2020-07-22)
+* (Apollon77) crash prevented (Sentry IOBROKER-INFLUXDB-E)
+
+### 1.9.0 (2020-07-21)
+* (Apollon77) Optimize handling in case of write errors and host unavailabilities
+
+### 1.8.8 (2020-07-18)
+* (Apollon77) Some errors prevented
+* (Apollon77) Set timeouts for influxdb connections to make sure connectioens do not run forever
+
+### 1.8.7 (2020-05-14)
+* (bluefox) added command to read supported features
+
+### 1.8.6 (2020-05-11)
+* (Apollon77) make sure disabling of datapoints while starting adapter do not crash adapter (Sentry IOBROKER-INFLUXDB-7)
+* (Apollon77) Make sure all start values are processed correctly
+* (Apollon77) More checks to make sure to not crash when states are disabled while data are processed (Sentry IOBROKER-INFLUXDB-8)
+
+### 1.8.5 (2020-05-08)
+* (bluefox) set default history if not yet set
+
+### 1.8.4 (2020-05-02)
+* (Apollon77) make sure disabling of datapoints do not crash adapter (Sentry IOBROKER-INFLUXDB-4)
+
+### 1.8.3 (2020-04-29)
+* (Apollon77) Fix pot crash case when deleting objects while saving values (Sentry) 
+
+### 1.8.2 (2020-04-19)
+* __Requires js-controller >= 2.0.0__
+* (Apollon77) removed usage of adapter.objects
+* (Apollon77) check if objects have changed and ignore unchanged
+* (Apollon77) Add Sentry for Error Reporting with js-controller 3.0
+* (Apollon77) Make sure value undefined is ignored
+
 ## 1.7.0 (2019-12-23)
 * (bluefox) Support of compact mode
 
@@ -372,7 +418,7 @@ sendTo('influxdb.0', 'getEnabledDPs', {}, function (result) {
 
 The MIT License (MIT)
 
-Copyright (c) 2015-2019 bluefox, apollon77
+Copyright (c) 2015-2020 bluefox, apollon77
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

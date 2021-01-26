@@ -77,7 +77,7 @@ function sendTo(target, command, message, callback) {
     });
 }
 
-describe('Test ' + adapterShortName + ' adapter', function() {
+describe('Test ' + adapterShortName + ' adapter with Buffered write', function() {
     before('Test ' + adapterShortName + ' adapter: Start js-controller', function (_done) {
         this.timeout(600000); // because of first install from npm
 
@@ -86,6 +86,9 @@ describe('Test ' + adapterShortName + ' adapter', function() {
             // enable adapter
             config.common.enabled  = true;
             config.common.loglevel = 'debug';
+
+            config.native.seriesBufferMax = 3;
+            config.native.dbname = 'otheriobroker';
 
             //config.native.dbtype   = 'sqlite';
 
@@ -113,7 +116,8 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                             }
                         },
                         type: 'state'
-                    }, _done);
+                    }, () =>
+                        states.setState('influxdb.0.memRss', {val: 0, from: 'test.0'}, _done));
                 });
         });
     });
@@ -511,7 +515,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
     });
 
     after('Test ' + adapterShortName + ' adapter: Stop js-controller', function (done) {
-        this.timeout(12000);
+        this.timeout(10000);
 
         setup.stopController(function (normalTerminated) {
             console.log('Adapter normal terminated: ' + normalTerminated);

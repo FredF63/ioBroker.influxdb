@@ -15,6 +15,50 @@ const cacheFile   = dataDir + 'influxdata.json';
 
 let adapter;
 
+function isEqual(a, b) {
+    //console.log('Compare ' + JSON.stringify(a) + ' with ' +  JSON.stringify(b));
+    // Create arrays of property names
+    if (a === null || a === undefined || b === null || b === undefined) {
+        return (a === b);
+    }
+
+    const aProps = Object.getOwnPropertyNames(a);
+    const bProps = Object.getOwnPropertyNames(b);
+
+    // If number of properties is different,
+    // objects are not equivalent
+    if (aProps.length !== bProps.length) {
+        //console.log('num props different: ' + JSON.stringify(aProps) + ' / ' + JSON.stringify(bProps));
+        return false;
+    }
+
+    for (var i = 0; i < aProps.length; i++) {
+        const propName = aProps[i];
+
+        if (typeof a[propName] !== typeof b[propName]) {
+            //console.log('type props ' + propName + ' different');
+            return false;
+        }
+        if (typeof a[propName] === 'object') {
+            if (!isEqual(a[propName], b[propName])) {
+                return false;
+            }
+        }
+        else {
+            // If values of same property are not equal,
+            // objects are not equivalent
+            if (a[propName] !== b[propName]) {
+                //console.log('props ' + propName + ' different');
+                return false;
+            }
+        }
+    }
+
+    // If we made it this far, objects
+    // are considered equivalent
+    return true;
+}
+
 function startAdapter(options) {
     options = options || {};
     Object.assign(options, {name: adapterName});
@@ -24,11 +68,7 @@ function startAdapter(options) {
     adapter.on('objectChange', (id, obj) => {
         const formerAliasId = adapter._aliasMap[id] ? adapter._aliasMap[id] : id;
         if (obj && obj.common &&
-            (
-                // todo remove history sometime (2016.08) - Do not forget object selector in io-package.json
-                (obj.common.history && obj.common.history[adapter.namespace] && obj.common.history[adapter.namespace].enabled) ||
-                (obj.common.custom && obj.common.custom[adapter.namespace] && obj.common.custom[adapter.namespace].enabled)
-            )
+            (obj.common.custom && obj.common.custom[adapter.namespace] && typeof obj.common.custom[adapter.namespace] === 'object' && obj.common.custom[adapter.namespace].enabled)
         ) {
             const realId = id;
             let checkForRemove = true;
@@ -57,40 +97,50 @@ function startAdapter(options) {
                 adapter.subscribeForeignStates('*');
             }
 
-            adapter._influxDPs[formerAliasId] && adapter._influxDPs[formerAliasId].relogTimeout && clearTimeout(adapter._influxDPs[formerAliasId].relogTimeout);
-
-            // todo remove history sometime (2016.08)
-            adapter._influxDPs[id] = obj.common.custom || obj.common.history;
-            adapter._influxDPs[id].realId = realId;
-            if (adapter._influxDPs[id][adapter.namespace].retention !== undefined && adapter._influxDPs[id][adapter.namespace].retention !== null && adapter._influxDPs[id][adapter.namespace].retention !== '') {
-                adapter._influxDPs[id][adapter.namespace].retention = parseInt(adapter._influxDPs[id][adapter.namespace].retention || adapter.config.retention, 10) || 0;
+            if (obj.common.custom[adapter.namespace].retention !== undefined && obj.common.custom[adapter.namespace].retention !== null && obj.common.custom[adapter.namespace].retention !== '') {
+                obj.common.custom[adapter.namespace].retention = parseInt(obj.common.custom[adapter.namespace].retention || adapter.config.retention, 10) || 0;
             } else {
-                adapter._influxDPs[id][adapter.namespace].retention = adapter.config.retention;
+                obj.common.custom[adapter.namespace].retention = adapter.config.retention;
             }
-            if (adapter._influxDPs[id][adapter.namespace].debounce !== undefined && adapter._influxDPs[id][adapter.namespace].debounce !== null && adapter._influxDPs[id][adapter.namespace].debounce !== '') {
-                adapter._influxDPs[id][adapter.namespace].debounce = parseInt(adapter._influxDPs[id][adapter.namespace].debounce, 10) || 0;
+            if (obj.common.custom[adapter.namespace].debounce !== undefined && obj.common.custom[adapter.namespace].debounce !== null && obj.common.custom[adapter.namespace].debounce !== '') {
+                obj.common.custom[adapter.namespace].debounce = parseInt(obj.common.custom[adapter.namespace].debounce, 10) || 0;
             } else {
-                adapter._influxDPs[id][adapter.namespace].debounce = adapter.config.debounce;
+                obj.common.custom[adapter.namespace].debounce = adapter.config.debounce;
             }
-            adapter._influxDPs[id][adapter.namespace].changesOnly = adapter._influxDPs[id][adapter.namespace].changesOnly === 'true' || adapter._influxDPs[id][adapter.namespace].changesOnly === true;
-            if (adapter._influxDPs[id][adapter.namespace].changesRelogInterval !== undefined && adapter._influxDPs[id][adapter.namespace].changesRelogInterval !== null && adapter._influxDPs[id][adapter.namespace].changesRelogInterval !== '') {
-                adapter._influxDPs[id][adapter.namespace].changesRelogInterval = parseInt(adapter._influxDPs[id][adapter.namespace].changesRelogInterval, 10) || 0;
+            obj.common.custom[adapter.namespace].changesOnly = obj.common.custom[adapter.namespace].changesOnly === 'true' || obj.common.custom[adapter.namespace].changesOnly === true;
+            if (obj.common.custom[adapter.namespace].changesRelogInterval !== undefined && obj.common.custom[adapter.namespace].changesRelogInterval !== null && obj.common.custom[adapter.namespace].changesRelogInterval !== '') {
+                obj.common.custom[adapter.namespace].changesRelogInterval = parseInt(obj.common.custom[adapter.namespace].changesRelogInterval, 10) || 0;
             } else {
-                adapter._influxDPs[id][adapter.namespace].changesRelogInterval = adapter.config.changesRelogInterval;
+                obj.common.custom[adapter.namespace].changesRelogInterval = adapter.config.changesRelogInterval;
             }
-            if (adapter._influxDPs[id][adapter.namespace].changesMinDelta !== undefined && adapter._influxDPs[id][adapter.namespace].changesMinDelta !== null && adapter._influxDPs[id][adapter.namespace].changesMinDelta !== '') {
-                adapter._influxDPs[id][adapter.namespace].changesMinDelta = parseFloat(adapter._influxDPs[id][adapter.namespace].changesMinDelta.toString().replace(/,/g, '.')) || 0;
+            if (obj.common.custom[adapter.namespace].changesMinDelta !== undefined && obj.common.custom[adapter.namespace].changesMinDelta !== null && obj.common.custom[adapter.namespace].changesMinDelta !== '') {
+                obj.common.custom[adapter.namespace].changesMinDelta = parseFloat(obj.common.custom[adapter.namespace].changesMinDelta.toString().replace(/,/g, '.')) || 0;
             } else {
-                adapter._influxDPs[id][adapter.namespace].changesMinDelta = adapter.config.changesMinDelta;
+                obj.common.custom[adapter.namespace].changesMinDelta = adapter.config.changesMinDelta;
             }
-            if (!adapter._influxDPs[id][adapter.namespace].storageType) adapter._influxDPs[id][adapter.namespace].storageType = false;
+            if (!obj.common.custom[adapter.namespace].storageType) obj.common.custom[adapter.namespace].storageType = false;
 
             // add one day if retention is too small
-            if (adapter._influxDPs[id][adapter.namespace].retention && adapter._influxDPs[id][adapter.namespace].retention <= 604800) {
-                adapter._influxDPs[id][adapter.namespace].retention += 86400;
+            if (obj.common.custom[adapter.namespace].retention && obj.common.custom[adapter.namespace].retention <= 604800) {
+                obj.common.custom[adapter.namespace].retention += 86400;
             }
 
-            writeInitialValue(adapter, id);
+            if (adapter._influxDPs[formerAliasId] && !adapter._influxDPs[formerAliasId].storageTypeAdjustedInternally && adapter._influxDPs[formerAliasId][adapter.namespace] && isEqual(obj.common.custom[adapter.namespace], adapter._influxDPs[formerAliasId][adapter.namespace])) {
+                adapter.log.debug('Object ' + id + ' unchanged. Ignore');
+                return;
+            }
+
+            const state = adapter._influxDPs[formerAliasId] ? adapter._influxDPs[formerAliasId].state : null;
+            const skipped = adapter._influxDPs[formerAliasId] ? adapter._influxDPs[formerAliasId].skipped : null;
+
+            adapter._influxDPs[id] = obj.common.custom;
+            adapter._influxDPs[id].realId = realId;
+            adapter._influxDPs[id].state = state;
+            adapter._influxDPs[id].skipped = skipped;
+
+            adapter._influxDPs[formerAliasId] && adapter._influxDPs[formerAliasId].relogTimeout && clearTimeout(adapter._influxDPs[formerAliasId].relogTimeout);
+
+            writeInitialValue(adapter, realId, id);
 
             adapter.log.info('enabled logging of ' + id + ', Alias=' + (id !== realId));
         } else {
@@ -205,7 +255,8 @@ function connect(adapter) {
         username: adapter.config.user,
         password: adapter.config.password,
         database: adapter.config.dbname,
-        timePrecision: 'ms'
+        timePrecision: 'ms',
+        requestTimeout: 30000
     });
 
     adapter._client.getDatabaseNames((err, dbNames) => {
@@ -221,12 +272,13 @@ function connect(adapter) {
                         reconnect(adapter);
                     } else {
                         if (!err && adapter.config.retention) {
-                            adapter._client.query('CREATE RETENTION POLICY "global" ON ' + adapter.config.dbname + ' DURATION ' + adapter.config.retention + 's REPLICATION 1 DEFAULT', err =>
-                                err && err.toString().indexOf('already exists') === -1 && adapter.log.error(err));
+                            return void adapter._client.query('CREATE RETENTION POLICY "global" ON ' + adapter.config.dbname + ' DURATION ' + adapter.config.retention + 's REPLICATION 1 DEFAULT', err => {
+                                    err && err.toString().indexOf('already exists') === -1 && adapter.log.error(err);
+                                    connect(adapter);
+                            });
+                        } else {
+                            return void connect(adapter);
                         }
-                        processStartValues(adapter);
-                        adapter.log.info('Connected!');
-                        startPing(adapter);
                     }
                 });
             } else {
@@ -241,10 +293,10 @@ function connect(adapter) {
 function processStartValues(adapter) {
     if (adapter._tasksStart && adapter._tasksStart.length) {
         const taskId = adapter._tasksStart.shift();
-        if (adapter._influxDPs[taskId][adapter.namespace].changesOnly) {
+        if (adapter._influxDPs[taskId] && adapter._influxDPs[taskId][adapter.namespace].changesOnly) {
             pushHistory(adapter, taskId, adapter._influxDPs[taskId].state, true);
-            setTimeout(() => processStartValues(adapter), 0);
         }
+        setImmediate(() => processStartValues(adapter));
     }
 }
 
@@ -317,6 +369,10 @@ function destroyDB(adapter, msg) {
 }
 
 function processMessage(adapter, msg) {
+    adapter.log.debug('Incoming message ' + msg.command + ' from ' + msg.from);
+    if (msg.command === 'features') {
+        adapter.sendTo(msg.from, msg.command, {supportedFeatures: []}, msg.callback);
+    } else
     if (msg.command === 'getHistory') {
         getHistory(adapter, msg);
     }
@@ -370,27 +426,39 @@ function resetConflictingPoints(adapter, msg) {
 function fixSelector(adapter, callback) {
     // fix _design/custom object
     adapter.getForeignObject('_design/custom', (err, obj) => {
-        if (!obj || obj.views.state.map.indexOf('common.history') === -1 || obj.views.state.map.indexOf('common.custom') === -1) {
+        if (!obj || !obj.views.state.map.includes('common.custom')) {
             obj = {
                 _id: '_design/custom',
                 language: 'javascript',
                 views: {
                     state: {
-                        map: 'function(doc) { if (doc.type === \'state\' && (doc.common.custom || doc.common.history)) emit(doc._id, doc.common.custom || doc.common.history) }'
+                        map: 'function(doc) { doc.type === \'state\' && doc.common.custom && emit(doc._id, doc.common.custom) }'
                     }
                 }
             };
-            adapter.setForeignObject('_design/custom', obj, err => {
-                if (callback) callback(err);
-            });
+            adapter.setForeignObject('_design/custom', obj, err => callback && callback(err));
         } else {
-            if (callback) callback(err);
+            callback && callback(err);
         }
     });
 }
 
 function main(adapter) {
     adapter.config.port = parseInt(adapter.config.port, 10) || 0;
+
+    // set default history if not yet set
+    adapter.getForeignObject('system.config', (err, obj) => {
+        if (obj && obj.common && !obj.common.defaultHistory) {
+            obj.common.defaultHistory = adapter.namespace;
+            adapter.setForeignObject('system.config', obj, err => {
+                if (err) {
+                    adapter.log.error('Cannot set default history instance: ' + err);
+                } else {
+                    adapter.log.info('Set default history instance to "' + adapter.namespace + '"');
+                }
+            });
+        }
+    });
 
     setConnected(adapter, false);
 
@@ -435,7 +503,7 @@ function main(adapter) {
 
     fixSelector(adapter, () =>
         // read all custom settings
-        adapter.objects.getObjectView('custom', 'state', {}, (err, doc) => {
+        adapter.getObjectView('custom', 'state', {}, (err, doc) => {
             if (err) adapter.log.error('main/getObjectView: ' + err);
             let count = 0;
             if (doc && doc.rows) {
@@ -450,7 +518,7 @@ function main(adapter) {
                         }
                         adapter._influxDPs[id] = doc.rows[i].value;
 
-                        if (!adapter._influxDPs[id][adapter.namespace]) {
+                        if (!adapter._influxDPs[id][adapter.namespace] || typeof adapter._influxDPs[id][adapter.namespace] !== 'object' || adapter._influxDPs[id][adapter.namespace].enabled === false) {
                             delete adapter._influxDPs[id];
                         } else {
                             count++;
@@ -487,7 +555,7 @@ function main(adapter) {
                             }
 
                             adapter._influxDPs[id].realId  = realId;
-                            writeInitialValue(adapter, id);
+                            writeInitialValue(adapter, realId, id);
                         }
                     }
                 }
@@ -516,9 +584,9 @@ function main(adapter) {
     connect(adapter);
 }
 
-function writeInitialValue(adapter, id) {
-    adapter.getForeignState(id, (err, state) => {
-        if (state) {
+function writeInitialValue(adapter, realId, id) {
+    adapter.getForeignState(realId, (err, state) => {
+        if (state && adapter._influxDPs[id]) {
             state.from = 'system.adapter.' + adapter.namespace;
             adapter._influxDPs[id].state = state;
             adapter._tasksStart.push(id);
@@ -536,6 +604,11 @@ function pushHistory(adapter, id, state, timerRelog) {
         const settings = adapter._influxDPs[id][adapter.namespace];
 
         if (!settings || !state) return;
+
+        if (state && state.val === undefined) {
+            adapter.log.warn(`state value undefined received for ${id} which is not allowed. Ignoring.`);
+            return;
+        }
 
         if (typeof state.val === 'string' && settings.storageType !== 'String') {
             const f = parseFloat(state.val);
@@ -584,6 +657,7 @@ function pushHistory(adapter, id, state, timerRelog) {
         let ignoreDebounce = false;
         if (timerRelog) {
             state.ts = Date.now();
+            state.from = 'system.adapter.' + adapter.namespace;
             adapter.log.debug('timed-relog ' + id + ', value=' + state.val + ', lastLogTime=' + adapter._influxDPs[id].lastLogTime + ', ts=' + state.ts);
             ignoreDebounce = true;
         } else {
@@ -631,7 +705,7 @@ function reLogHelper(adapter, _id) {
                 adapter.log.info('init timed Relog: can not get State for ' + _id + ' : ' + err);
             } else if (!state) {
                 adapter.log.info('init timed Relog: disable relog because state not set so far for ' + _id + ': ' + JSON.stringify(state));
-            } else {
+            } else if (adapter._influxDPs[_id]) {
                 adapter.log.debug('init timed Relog: getState ' + _id + ':  Value=' + state.val + ', ack=' + state.ack + ', ts=' + state.ts  + ', lc=' + state.lc);
                 adapter._influxDPs[_id].state = state;
                 pushHistory(adapter, _id, adapter._influxDPs[_id].state, true);
@@ -642,13 +716,15 @@ function reLogHelper(adapter, _id) {
 
 function pushHelper(adapter, _id, cb) {
     if (!adapter._influxDPs[_id] || !adapter._influxDPs[_id].state || !adapter._influxDPs[_id][adapter.namespace]) {
-        return cb && cb('ID ' + _id + ' not activated for logging');
+        return cb && setImmediate(cb, 'ID ' + _id + ' not activated for logging');
     }
     const _settings = adapter._influxDPs[_id][adapter.namespace];
     // if it was not deleted in this time
     adapter._influxDPs[_id].timeout = null;
 
-    if (adapter._influxDPs[_id].state.val === null) return; // InfluxDB can not handle null values
+    if (adapter._influxDPs[_id].state.val === null) { // InfluxDB can not handle null values
+        return cb && setImmediate(cb, 'null value for ' + _id + ' can not be handled');
+    }
 
     if (typeof adapter._influxDPs[_id].state.val === 'object') adapter._influxDPs[_id].state.val = JSON.stringify(adapter._influxDPs[_id].state.val);
 
@@ -673,13 +749,13 @@ function pushHelper(adapter, _id, cb) {
         }
         else {
             adapter.log.info('Do not store value "' + adapter._influxDPs[_id].state.val + '" for ' + _id + ' because no number');
-            return;
+            return cb && setImmediate(cb, 'do not store value for ' + _id + ' because no number');
         }
     }
     else if (_settings.storageType === 'Boolean' && typeof adapter._influxDPs[_id].state.val !== 'boolean') {
         adapter._influxDPs[_id].state.val = !!adapter._influxDPs[_id].state.val;
     }
-    pushValueIntoDB(adapter, _id, adapter._influxDPs[_id].state, cb);
+    pushValueIntoDB(adapter, _id, adapter._influxDPs[_id].state, () => cb && setImmediate(cb));
 }
 
 function pushValueIntoDB(adapter, id, state, cb) {
@@ -727,7 +803,7 @@ function pushValueIntoDB(adapter, id, state, cb) {
         ack:   !!state.ack
     };
 
-    if ((adapter._conflictingPoints[id] || (adapter.config.seriesBufferMax === 0)) && (adapter._client.request) && (adapter._client.request.getHostsAvailable().length > 0)) {
+    if ((adapter._conflictingPoints[id] || (adapter.config.seriesBufferMax === 0)) && (adapter._connected && adapter._client.request && adapter._client.request.getHostsAvailable().length > 0)) {
         if (adapter.config.seriesBufferMax !== 0) {
             adapter.log.debug('Direct writePoint("' + id + ' - ' + influxFields.value + ' / ' + influxFields.time + ')');
         }
@@ -738,15 +814,22 @@ function pushValueIntoDB(adapter, id, state, cb) {
 }
 
 function addPointToSeriesBuffer(adapter, id, stateObj, cb) {
+    if ((adapter._conflictingPoints[id] || (adapter.config.seriesBufferMax === 0)) && (adapter._connected && adapter._client.request && adapter._client.request.getHostsAvailable().length > 0)) {
+        if (adapter.config.seriesBufferMax !== 0) {
+            adapter.log.debug('Direct writePoint("' + id + ' - ' + stateObj.value + ' / ' + stateObj.time + ')');
+        }
+        return void writeOnePointForID(adapter, id, stateObj, true, cb);
+    }
+
     if (!adapter._seriesBuffer[id]) {
         adapter._seriesBuffer[id] = [];
     }
     adapter._seriesBuffer[id].push([stateObj]);
     adapter._seriesBufferCounter++;
-    if ((adapter._seriesBufferCounter > adapter.config.seriesBufferMax) && (adapter._client.request) && (adapter._client.request.getHostsAvailable().length > 0) && (!adapter._seriesBufferFlushPlanned)) {
+    if ((adapter._seriesBufferCounter > adapter.config.seriesBufferMax) && adapter._connected && adapter._client.request && (adapter._client.request.getHostsAvailable().length > 0) && (!adapter._seriesBufferFlushPlanned)) {
         // flush out
         adapter._seriesBufferFlushPlanned = true;
-        setTimeout(() => storeBufferedSeries(adapter, cb), 0);
+        setImmediate(() => storeBufferedSeries(adapter, cb));
     } else {
         cb && cb();
     }
@@ -759,21 +842,26 @@ function storeBufferedSeries(adapter, cb) {
 
     if (adapter._client.request.getHostsAvailable().length === 0) {
         setConnected(adapter, false);
-        adapter.log.info('No hosts available currently, try later');
+        adapter.log.info('Currently no hosts available, try later');
         adapter._seriesBufferFlushPlanned = false;
-        return cb && cb('No hosts available currently, try later');
+        return cb && cb('Currently no hosts available, try later');
+    }
+    if (!adapter._connected) {
+        adapter.log.info('Not connected to InfluxDB, try later');
+        adapter._seriesBufferFlushPlanned = false;
+        return cb && cb('Not connected to InfluxDB, try later');
     }
     adapter._seriesBufferChecker && clearInterval(adapter._seriesBufferChecker);
 
     adapter.log.info('Store ' + adapter._seriesBufferCounter + ' buffered influxDB history points');
 
+    const currentBuffer = adapter._seriesBuffer;
     if (adapter._seriesBufferCounter > 15000) {
         // if we have too many datapoints in buffer; we better writer them per id
         adapter.log.info('Too many datapoints (' + adapter._seriesBufferCounter + ') to write at once; write per ID');
-        writeAllSeriesPerID(adapter, adapter._seriesBuffer);
-        cb && cb();
+        writeAllSeriesPerID(adapter, currentBuffer, cb);
     } else {
-        writeAllSeriesAtOnce(adapter, adapter._seriesBuffer, cb);
+        writeAllSeriesAtOnce(adapter, currentBuffer, cb);
     }
     adapter._seriesBuffer = {};
     adapter._seriesBufferCounter = 0;
@@ -796,12 +884,13 @@ function writeAllSeriesAtOnce(adapter, series, cb) {
                         series[id].forEach(s => adapter._seriesBuffer[id].push(s));
                     }
                 });
-            } else if (err.message && (typeof err.message === 'string') && (err.message.indexOf('partial write') !== -1)) {
+                reconnect(adapter);
+            } else if (err.message && typeof err.message === 'string' && err.message.indexOf('partial write') !== -1 && err.message.indexOf('field type conflict') === -1) {
                 adapter.log.warn('All possible datapoints were written, others can not really be corrected');
             } else {
                 adapter.log.info('Try to write ' + Object.keys(series).length + ' Points separate to find the conflicting id');
                 // fallback and send data per id to find out problematic id!
-                writeAllSeriesPerID(adapter, series);
+                return writeAllSeriesPerID(adapter, series, cb);
             }
         } else {
             setConnected(adapter, true);
@@ -810,61 +899,85 @@ function writeAllSeriesAtOnce(adapter, series, cb) {
     });
 }
 
-function writeAllSeriesPerID(adapter, series) {
-    Object.keys(series).forEach(id => writeSeriesPerID(adapter, id, series[id]));
+function writeAllSeriesPerID(adapter, series, cb, idList) {
+    if (!idList) {
+        idList = Object.keys(series);
+    }
+    if (!idList.length) {
+        return cb && cb();
+    }
+    const id = idList.shift();
+    writeSeriesPerID(adapter, id, series[id], () => writeAllSeriesPerID(adapter, series, cb, idList));
 }
 
-function writeSeriesPerID(adapter, seriesId, points) {
+function writeSeriesPerID(adapter, seriesId, points, cb) {
+    if (!points.length) {
+        return cb && cb();
+    }
     adapter.log.debug('writePoints ' + points.length + ' for ' + seriesId + ' at once');
 
-    if (points.length > 15000) {
-        adapter.log.info('Too many dataPoints (' + points.length + ') for "' + seriesId + '" to write at once; write each single one');
-        writeSeriesPerID(adapter, seriesId, points.slice(0, 15000));
-        writeSeriesPerID(adapter, seriesId, points.slice(15000));
-    } else {
-        adapter._client.writePoints(seriesId, points, err => {
-            if (err) {
-                adapter.log.warn('Error on writePoints for ' + seriesId + ': ' + err);
-                if ((adapter._client.request.getHostsAvailable().length === 0) || (err.message && err.message === 'timeout')) {
-                    adapter.log.info('Host not available, move all points back in the Buffer');
-                    // error caused InfluxDB adapter._client to remove the host from available for now
-                    adapter._seriesBuffer[seriesId] = adapter._seriesBuffer[seriesId] || [];
-
-                    for (let i = 0; i < points.length; i++) {
-                        adapter._seriesBuffer[seriesId].push(points[i]);
-                        adapter._seriesBufferCounter++;
-                    }
-
-                    reconnect(adapter);
-                } else {
-                    adapter.log.warn('Try to write ' + points.length + ' Points separate to find the conflicting one');
-                    // we found the conflicting id
-                    writePointsForID(adapter, seriesId, points);
-                }
-            }
-        });
+    const pointsToSend = points.splice(0, 15000);
+    if (points.length) { // We still have some left
+        adapter.log.info('Too many dataPoints (' + (pointsToSend.length + points.length) + ') for "' + seriesId + '" to write at once; split in 15.000 batches');
     }
+    adapter._client.writePoints(seriesId, pointsToSend, err => {
+        if (err) {
+            adapter.log.warn('Error on writePoints for ' + seriesId + ': ' + err);
+            if ((adapter._client.request.getHostsAvailable().length === 0) || (err.message && err.message === 'timeout')) {
+                adapter.log.info('Host not available, move all points back in the Buffer');
+                // error caused InfluxDB adapter._client to remove the host from available for now
+                adapter._seriesBuffer[seriesId] = adapter._seriesBuffer[seriesId] || [];
+
+                for (let i = 0; i < pointsToSend.length; i++) {
+                    adapter._seriesBuffer[seriesId].push(pointsToSend[i]);
+                    adapter._seriesBufferCounter++;
+                }
+                for (let i = 0; i < points.length; i++) {
+                    adapter._seriesBuffer[seriesId].push(points[i]);
+                    adapter._seriesBufferCounter++;
+                }
+                reconnect(adapter);
+                return cb && cb();
+            } else {
+                adapter.log.warn('Try to write ' + pointsToSend.length + ' Points separate to find the conflicting one');
+                // we found the conflicting id
+                return writePointsForID(adapter, seriesId, pointsToSend, () => writeSeriesPerID(adapter, seriesId, points, cb));
+            }
+        } else {
+            setConnected(adapter, true);
+        }
+        writeSeriesPerID(adapter, seriesId, points, cb);
+    });
 }
 
-function writePointsForID(adapter, seriesId, points) {
+function writePointsForID(adapter, seriesId, points, cb) {
+    if (!points.length) {
+        return cb && cb();
+    }
     adapter.log.debug('writePoint ' + points.length + ' for ' + seriesId + ' separate');
 
-    points.forEach(point => writeOnePointForID(adapter, seriesId, point[0]));
+    const point = points.shift();
+    writeOnePointForID(adapter, seriesId, point[0], false, () => setImmediate (() => writePointsForID(adapter, seriesId, points, cb)));
 }
 
 function writeOnePointForID(adapter, pointId, point, directWrite, cb) {
     directWrite = directWrite || false;
 
+    if (!adapter._connected) {
+        addPointToSeriesBuffer(adapter, pointId, point);
+        return cb && cb();
+    }
+
     adapter._client.writePoint(pointId, point, null, (err /* , result */) => {
         if (err) {
             adapter.log.warn('Error on writePoint("' + JSON.stringify(point) + '): ' + err + ' / ' + JSON.stringify(err.message));
             if ((adapter._client.request.getHostsAvailable().length === 0) || (err.message && err.message === 'timeout')) {
-                setConnected(adapter, false);
+                reconnect(adapter);
                 addPointToSeriesBuffer(adapter, pointId, point);
             } else if (err.message && (typeof err.message === 'string') && (err.message.indexOf('field type conflict') !== -1)) {
                 // retry write after type correction for some easy cases
                 let retry = false;
-                if (!adapter._influxDPs[pointId][adapter.namespace].storageType) {
+                if (adapter._influxDPs[pointId] && adapter._influxDPs[pointId][adapter.namespace] && !adapter._influxDPs[pointId][adapter.namespace].storageType) {
                     let convertDirection = '';
                     if (err.message.indexOf('is type bool, already exists as type float') !== -1 ||
                         err.message.indexOf('is type boolean, already exists as type float') !== -1) {
@@ -878,6 +991,7 @@ function writeOnePointForID(adapter, pointId, point, directWrite, cb) {
                             retry = true;
                         }
                         adapter._influxDPs[pointId][adapter.namespace].storageType = 'Number';
+                        adapter._influxDPs[pointId].storageTypeAdjustedInternally = true;
                     }
                     else if ((err.message.indexOf('is type float, already exists as type bool') !== -1) || (err.message.indexOf('is type float64, already exists as type bool') !== -1)) {
                         convertDirection = 'float -> bool';
@@ -890,11 +1004,13 @@ function writeOnePointForID(adapter, pointId, point, directWrite, cb) {
                             retry = true;
                         }
                         adapter._influxDPs[pointId][adapter.namespace].storageType = 'Boolean';
+                        adapter._influxDPs[pointId].storageTypeAdjustedInternally = true;
                     }
                     else if (err.message.indexOf(', already exists as type string') !== -1) {
                         point.value = point.value.toString();
                         retry = true;
                         adapter._influxDPs[pointId][adapter.namespace].storageType = 'String';
+                        adapter._influxDPs[pointId].storageTypeAdjustedInternally = true;
                     }
                     if (retry) {
                         adapter.log.info('Try to convert ' + convertDirection + ' and re-write for ' + pointId + ' and set storageType to ' + adapter._influxDPs[pointId][adapter.namespace].storageType);
@@ -929,6 +1045,7 @@ function writeOnePointForID(adapter, pointId, point, directWrite, cb) {
                     adapter.log.info('Add point that had error for ' + pointId + ' to buffer again, error-count=' + adapter._errorPoints[pointId]);
                     addPointToSeriesBuffer(adapter, pointId, point);
                 } else {
+                    adapter.log.info('Discard point that had error for ' + pointId + ', error-count=' + adapter._errorPoints[pointId]);
                     adapter._errorPoints[pointId] = 0;
                 }
             }
@@ -939,7 +1056,35 @@ function writeOnePointForID(adapter, pointId, point, directWrite, cb) {
     });
 }
 
+function writeFileBufferToDisk() {
+    // write buffered values into cache file to process it by next start
+    const fileData = {};
+    if (adapter._seriesBufferCounter) {
+        fileData.seriesBufferCounter = adapter._seriesBufferCounter;
+        fileData.seriesBuffer        = adapter._seriesBuffer;
+        fileData.conflictingPoints   = adapter._conflictingPoints;
+        try {
+            fs.writeFileSync(cacheFile, JSON.stringify(fileData));
+            adapter.log.warn('Store data for ' + fileData.seriesBufferCounter + ' points and ' + Object.keys(fileData.conflictingPoints).length + ' conflicts');
+        }
+        catch (err) {
+            adapter.log.warn('Could not save unstored data to file: ' + err);
+        }
+    }
+    adapter._seriesBufferCounter = null;
+}
+
 function finish(adapter, callback) {
+    if (!adapter._subscribeAll) {
+        // unsubscribe
+        for (const _id in adapter._influxDPs) {
+            adapter.unsubscribeForeignStates(adapter._influxDPs[_id].realId);
+        }
+    } else {
+        adapter._subscribeAll = false;
+        adapter.unsubscribeForeignStates('*');
+    }
+
     if (adapter._reconnectTimeout) {
         clearTimeout(adapter._reconnectTimeout);
         adapter._reconnectTimeout = null;
@@ -958,7 +1103,6 @@ function finish(adapter, callback) {
         adapter._seriesBufferChecker = null;
     }
     let count = 0;
-    const now = Date.now();
     for (const id in adapter._influxDPs) {
         if (!adapter._influxDPs.hasOwnProperty(id)) continue;
 
@@ -971,7 +1115,7 @@ function finish(adapter, callback) {
             adapter._influxDPs[id].timeout = null;
         }
 
-        let tmpState;
+/*        let tmpState;
         if (Object.assign) {
             tmpState = Object.assign({}, adapter._influxDPs[id].state);
         }
@@ -979,16 +1123,18 @@ function finish(adapter, callback) {
             tmpState = JSON.parse(JSON.stringify(adapter._influxDPs[id].state));
         }
         const state = adapter._influxDPs[id].state ? tmpState : null;
-
+*/
         if (adapter._influxDPs[id].skipped) {
             count++;
             adapter._influxDPs[id].state = adapter._influxDPs[id].skipped;
             pushHelper(adapter, id, () => {
                 if (!--count) {
+                    writeFileBufferToDisk();
                     if (callback) {
-                        setTimeout(callback, 500);
+                        callback();
+                        callback = null;
                     } else {
-                        setTimeout(() => adapter.terminate ? adapter.terminate() : process.exit(), 500);
+                        adapter.terminate ? adapter.terminate() : process.exit();
                     }
                 }
             });
@@ -996,18 +1142,8 @@ function finish(adapter, callback) {
         }
     }
 
-    // write buffered values into cache file to process it by next start
-    const fileData = {};
-    if (adapter._seriesBufferCounter) {
-        fileData.seriesBufferCounter = adapter._seriesBufferCounter;
-        fileData.seriesBuffer        = adapter._seriesBuffer;
-        fileData.conflictingPoints   = adapter._conflictingPoints;
-        fs.writeFileSync(cacheFile, JSON.stringify(fileData));
-        adapter.log.warn('Store data for ' + fileData.seriesBufferCounter + ' points and ' + Object.keys(fileData.conflictingPoints).length + ' conflicts');
-    }
-    adapter._seriesBufferCounter = null;
-
     if (!count) {
+        writeFileBufferToDisk();
         if (callback) {
             callback();
         } else {
